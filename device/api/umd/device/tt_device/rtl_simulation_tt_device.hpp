@@ -8,6 +8,7 @@
 #include <memory>
 #include <mutex>
 
+#include "umd/device/chip_helpers/simulation_tlb_manager.hpp"
 #include "umd/device/simulation/rtl_sim_communicator.hpp"
 #include "umd/device/soc_descriptor.hpp"
 #include "umd/device/tt_device/tt_device.hpp"
@@ -61,6 +62,8 @@ public:
 
     RtlSimCommunicator* get_communicator() { return communicator_.get(); }
 
+    const architecture_implementation* get_architecture_impl() const { return architecture_impl_.get(); }
+
 protected:
     void retrain_dram_core(const uint32_t dram_channel) override;
 
@@ -71,5 +74,7 @@ private:
     std::filesystem::path simulator_directory_;
     SocDescriptor soc_descriptor_;
     std::unique_ptr<architecture_implementation> architecture_impl_;
+    std::unique_ptr<SimulationTlbManager> tlb_manager_;
+    std::unique_ptr<TlbWindow> cached_tlb_window_;
 };
 }  // namespace tt::umd

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <memory>
 
-#include "umd/device/chip_helpers/tt_sim_tlb_manager.hpp"
+#include "umd/device/chip_helpers/simulation_tlb_manager.hpp"
 #include "umd/device/pcie/tt_sim_tlb_handle.hpp"
 #include "umd/device/simulation/tt_sim_communicator.hpp"
 #include "umd/device/tt_device/tt_device.hpp"
@@ -59,16 +59,9 @@ uint64_t TTSimTlbWindow::get_physical_address(uint64_t offset) const {
     return reinterpret_cast<uint64_t>(tlb_handle->get_base()) + get_total_offset(offset);
 }
 
-void TTSimTlbWindow::safe_write32(uint64_t offset, uint32_t value) {
-    // In simulation, we can assume all accesses are "safe" since we're not dealing with real hardware constraints.
-    // However, we still want to validate the offset and size to prevent out-of-bounds access in our simulated memory.
-    write32(offset, value);
-}
+void TTSimTlbWindow::safe_write32(uint64_t offset, uint32_t value) { write32(offset, value); }
 
-uint32_t TTSimTlbWindow::safe_read32(uint64_t offset) {
-    // Similar to safe_write32, we will just call the regular read32 after validating the offset.
-    return read32(offset);
-}
+uint32_t TTSimTlbWindow::safe_read32(uint64_t offset) { return read32(offset); }
 
 void TTSimTlbWindow::safe_write_register(uint64_t offset, const void* data, size_t size) {
     write_register(offset, data, size);
